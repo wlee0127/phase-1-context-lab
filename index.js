@@ -14,7 +14,7 @@
      ["bartholomew", "simpson", "scamp", 3]
    ]
 */
-let employeeRecords = [];
+
  /*let employees = [
      {
      firstName: "test1",
@@ -50,82 +50,63 @@ let employeeRecords = [];
      
  
  const createEmployeeRecords = function(twoRows) {
+    let employeeRecords = [];
     for(let i=0; i<=twoRows.length-1; i++) {
         let record = createEmployeeRecord(twoRows[i]);
         debugger; 
         employeeRecords.push(record);
     }   
     console.log(employeeRecords)
+    return employeeRecords;
  }
  
- 
- const createTimeInEvent = function(bpRecord, timeInRecord) {
-    let record = bpRecord;
+ const createTimeInEvent = function(timeInRecord) {
     debugger;
      let timeInEventObject = {
          type: "TimeIn",
-         hour: null,
-         date: null,
+         hour: Number(timeInRecord.substr(11)),
+         date: timeInRecord.substr(0,10),
      }
-     timeInEventObject.hour = Number(timeInRecord.substr(11));
+     this.timeInEvents.push(timeInEventObject);
      debugger;
-     timeInEventObject.date = timeInRecord.substr(0,10);
-     debugger;
-     record.timeInEvents.push(timeInEventObject);
-     debugger;
-     return record;
- 
+     console.log(this);
+     return this;
  }
- let bpRecord = createEmployeeRecord(["Byron", "Poodle", "Mascot", 3])
- createTimeInEvent(bpRecord, "2014-02-28 1400")
 
- 
- const createTimeOutEvent = function(record, timeOutRecord) {
-     record;
+ const createTimeOutEvent = function(timeOutRecord) {
      let timeOutEventObject = {
          type: "TimeOut",
-         hour: null,
-         date: null,
+         hour: Number(timeOutRecord.substr(11)),
+         date: timeOutRecord.substr(0,10),
      }
-     timeOutEventObject.hour = Number(timeOutRecord.substr(11));
-     timeOutEventObject.date = timeOutRecord.substr(0,10);
-     record.timeOutEvents.push(timeOutEventObject);
-     return record;
+     this.timeOutEvents.push(timeOutEventObject);
+     return this;
  }
  
- const hoursWorkedOnDate = function(record, date ) {
-     record;
-     const timeIn = record.timeInEvents[0].hour;
-     const timeOut = record.timeOutEvents[0].hour;
+ const hoursWorkedOnDate = function() {
+     const timeIn = this.timeInEvents[0].hour;
+     const timeOut = this.timeOutEvents[0].hour;
      const hoursWorked = (timeOut-timeIn)/100;
      return hoursWorked;
  }
  
- const wagesEarnedOnDate = function(record, date) {
-     record;
-     const hoursWorkedPay = hoursWorkedOnDate(record, date);
-     let pay = hoursWorkedPay*(record.payPerHour);
-     return pay;
-     /*for(let i=record.length-1; i>=record.length-1; i--) {
-         let pay = hoursWorkedPay*(record[i].payPerHour);
-         console.log(pay);
-         return pay;
-     }*/
-     
+ const wagesEarnedOnDate = function() {
+     const hoursWorkedPay = hoursWorkedOnDate.call(this);
+     let pay = hoursWorkedPay*(this.payPerHour);
+     return pay;   
  }
- /*
- const allWagesFor = function(record) {
-     record;
+ 
+ const allWagesFor = function() {
      let hoursWorked = 0;
-     for(let i=0; i<=(record.timeInEvents.length)-1; i++) {
-         const timeIn = record.timeInEvents[i].hour;
-         const timeOut = record.timeOutEvents[i].hour;
+     for(let i=0; i<=(this.timeInEvents.length)-1; i++) {
+         const timeIn = this.timeInEvents[i].hour;
+         const timeOut = this.timeOutEvents[i].hour;
          let hours = (timeOut-timeIn)/100;
          hoursWorked += hours;
      }
-     let wage = hoursWorked*record.payPerHour;
+     let wage = hoursWorked*this.payPerHour;
      return wage;
- }*/
+ }
  
  const calculatePayroll = function(employees) {
      employees;
@@ -148,8 +129,29 @@ let employeeRecords = [];
      console.log(totalPay);
      return totalPay;
  }
- 
 
+ const findEmployeeByFirstName = function(collection, firstNameString) {
+    for (let i=0; i<=collection.length-1; i++) {
+        debugger;
+        if (collection[i].firstName === firstNameString){
+            debugger;
+            let result = collection[i];
+            console.log(result);
+            return result;
+        }else {
+            continue;
+        }
+    }
+ }
+ let src = [
+    ["Loki", "Laufeysson-Odinsson", "HR Representative", 35],
+    ["Natalia", "Romanov", "CEO", 150]
+  ]
+  /*
+ let emps = createEmployeeRecords(src)
+ let loki = findEmployeeByFirstName(emps, "Loki")
+ console.log(loki.familyName)*/
+/*
 const allWagesFor = function () {
     const eligibleDates = this.timeInEvents.map(function (e) {
         return e.date
@@ -160,5 +162,5 @@ const allWagesFor = function () {
     }.bind(this), 0) // <== Hm, why did we need to add bind() there? We'll discuss soon!
 
     return payable
-}
+}*/
 
